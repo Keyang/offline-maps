@@ -1,0 +1,210 @@
+<mgheader title="{{ workOrder.data.description }}"></mgheader>
+
+
+<div class="content grey-background" swipeable swipe-right="#/WorkOrderList" swipe-left="#/JobPack/{{ workOrder.id }}">
+
+  <div class="buttonbar">
+    <div class="button" ng-click="updateStatus('ONWAY')">
+      <div class="icon on-way-btn" ng-class="{'green': workOrder.statusValue() >= workOrder.ONWAY, 'red': workOrder.statusValue() == workOrder.ONWAY - 1 }"></div>
+      <div class="button-text">On Way</div>
+    </div>
+    <div class="button" ng-click="updateStatus('ONSITE')">
+      <div class="icon on-site-btn" ng-class="{'green': workOrder.statusValue() >= workOrder.ONSITE, 'red': workOrder.statusValue() == workOrder.ONSITE - 1 }"></div>
+      <div class="button-text">On Site</div>
+    </div>
+    <div class="button" ng-click="checkRiskAssess()">
+      <div class="icon risk-assess-btn" ng-class="{'green': workOrder.statusValue() >= workOrder.RISK_ASSESS, 'red': workOrder.statusValue() == workOrder.RISK_ASSESS - 1 }"></div>
+      <div class="button-text">Risk Assess</div>
+    </div>
+    <div class="button" ng-click="takePhoto()">
+      <div class="icon take-photo-btn" ng-class="{'orange': workOrder.statusValue() == workOrder.TAKE_PHOTOS, 'red': workOrder.statusValue() == workOrder.TAKE_PHOTOS - 1, 'green': workOrder.statusValue() > workOrder.TAKE_PHOTOS }"></div>
+      <div class="button-text">Take Photo</div>
+    </div>
+    <div class="button" ng-click="complete()">
+      <div class="icon complete-btn" ng-class="{'green': workOrder.statusValue() >= workOrder.COMPLETE, 'red': workOrder.statusValue() == workOrder.COMPLETE - 1 }"></div>
+      <div class="button-text">Complete</div>
+    </div>
+  </div>
+
+  <div class="work-order-content sub-content" ng-switch on="content">
+
+    <riskassess yes="riskAssessComplete()" no="riskAssessCancelled()" ng-switch-when="risk-assess"></riskassess>
+
+    <mgscroll ng-switch-default>
+      <!-- Description -->
+      <expandable title="Work Summary" class="fill">
+        <pre>{{ workOrder.data.summary }}</pre>
+      </expandable>
+
+      <!-- Abort Reason -->
+      <div class="section" ng-show="workOrder.statusValue() == workOrder.ABORT">
+        <h3 class="bg-darkred">Work Aborted</h3>
+
+        <div class="section-content osr">
+          <b>Reason:</b> {{ workOrder.status().data.reason }}
+        </div>
+      </div>
+
+      <!-- Complete Result -->
+      <div class="section" ng-show="workOrder.statusValue() == workOrder.COMPLETE">
+        <h3 class="bg-green">Work Order Completed</h3>
+
+        <div class="section-content osr">
+          <b>Result:</b> {{ workOrder.status().data.result }}
+        </div>
+      </div>
+
+      <!-- Photos -->
+      <div ng-show="workOrder.photos.length > 0" id="photos">
+        <div ng-repeat="photo in workOrder.photos" class="photo">
+
+          <img ng-src="{{ photo.ref.getLocalUrl() }}" />
+          <div class="photo-text">{{ photo.description }}</div>
+
+        </div>
+      </div>
+
+    </mgscroll>
+
+  </div>
+
+  <mgdialog title="GPS Failed" header-class="bg-darkred" control="gpsDialog">
+    <div class="query-dialog">
+      <div class="text osr">
+        Your current location could not be found using GPS. Press <span class="green">RETRY</span> to wait some more,
+        or <span class="orange">CONTINUE</span> to continue without storing coordinates.
+      </div>
+      <div class="buttons">
+        <button class="btn green" ng-click="gpsDialog.data = 'retry'; gpsDialog.done()">RETRY</button>
+        <button class="btn orange" ng-click="gpsDialog.data = 'continue'; gpsDialog.done()">CONTINUE</button>
+      </div>
+    </div>
+  </mgdialog>
+  <div ng-show="needsGPS" class="gps-waiting osr">
+    <div class="message"> <img src="images/location-icon-clear.png"/>GETTING LOCATION INFO...</div>
+  </div>
+
+
+  <mgdialog control="completeDialog" header-class="bg-green" title="Work Item Complete">
+    <form>
+      <div ng-repeat="item in main" class="row darkgrey">
+        <label>
+          <div class="item-wrapper">
+            <input name="result" ng-model="completeDialog.data" value="{{ item }}" type="radio" />
+          </div>
+          {{ item }}
+        </label>
+      </div>
+
+      <div class="divider bg-darkgrey white">MADE SAFE (Select Reason)</div>
+
+      <div class="divider bg-blue grey" ng-click="showTms=!showTms">
+        <span>Select TM Required</span>
+        <img class="dropdown-arrow" ng-class="{ 'rotate': showTms }" src="images/arrow-icon-grey.png">
+      </div>
+      <div ng-show="showTms">
+        <div ng-repeat="tm in tms" class="row darkgrey">
+          <label>
+            <div class="item-wrapper bg-blue">
+              <input name="result" ng-model="completeDialog.data" value="{{ tm }}" type="radio" />
+            </div>{{ tm }}
+          </label>
+        </div>
+      </div>
+
+      <div ng-repeat="item in sub" class="row darkgrey">
+        <label>
+          <div class="item-wrapper">
+            <input name="result" ng-model="completeDialog.data" value="{{ item }}" type="radio" />
+          </div>
+          {{ item }}
+        </label>
+      </div>
+    </form>
+  </mgdialog>
+
+
+  <mgdialog control="abortDialog" header-class="bg-darkred" title="SELECT ABORT REASON">
+    <form>
+      <div>
+        <div class="divider bg-blue grey" ng-click="showTms=!showTms">
+          <span>Select TM Required</span>
+          <img class="dropdown-arrow" ng-class="{ 'rotate': showTms }" src="images/arrow-icon-grey.png">
+        </div>
+        <div ng-show="showTms">
+          <div ng-repeat="tm in tms" class="row darkgrey">
+            <label>
+              <div class="item-wrapper bg-blue">
+                <input name="result" ng-model="abortDialog.data" value="{{ tm }}" type="radio" />
+              </div>{{ tm }}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div ng-show="!showTms">
+        <div ng-repeat="reason in abortReasons" class="row darkgrey">
+          <label>
+            <div class="item-wrapper">
+              <input name="result" ng-model="abortDialog.data" value="{{ reason }}" type="radio" />
+            </div>{{ reason }}
+          </label>
+        </div>
+      </div>
+    </form>
+  </mgdialog>
+
+</div>
+
+
+<!-- footer -->
+
+<div class="footer">
+
+  <div ng-show="abortDialog.opened || completeDialog.opened">
+
+    <div class="left" ng-click="abortDialog.close(); completeDialog.close()">
+      <div class="back-icon"></div>
+      <div class="back-text white osr">BACK</div>
+    </div>
+
+    <div class="center">
+      <button class="small btn green" ng-click="abortDialog.done(); completeDialog.done()">OK</button>
+    </div>
+
+  </div>
+
+  <div ng-show="!(abortDialog.opened || completeDialog.opened)">
+
+    <div class="left">
+      <a href="#/WorkOrderList">
+        <div class="back-icon"></div>
+        <div class="back-text white osr">WORK LIST</div>
+      </a>
+    </div>
+
+    <div class="center" ng-switch on="workOrder.appStatus()">
+      <div ng-switch-when="COMPLETE">
+        <button class="small btn green">
+          <a href="#/WorkOrderList">Complete Job</a>
+        </button>
+      </div>
+      <div ng-switch-default>
+        <button ng-show="workOrder.statusValue() > workOrder.ABORT" class="small btn red" ng-click="abort()">ABORT</button>
+      </div>
+    </div>
+
+    <div class="right">
+      <a href="#/JobPack/{{ workOrder.id }}">
+        <div class="forward-icon"></div>
+        <div class="forward-text white osr">JOB PACK</div>
+      </a>
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+
+

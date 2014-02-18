@@ -1,0 +1,45 @@
+<a href="#/WorkOrder/{{ workOrder.id }}">
+  <div class="work-order-list-wrapper" ng-class="{ 'collapsed': (workOrder.statusValue() == workOrder.ABORT || workOrder.statusValue() == workOrder.COMPLETE) }">
+    <div class="work-order-list-title-row bg-turq white" ng-class="{ 'bg-darkred': workOrder.statusValue() == workOrder.ABORT, 'bg-green': workOrder.statusValue() == workOrder.COMPLETE }">
+      <div class="work-order-list-number osb">
+        Work Order No:
+        <span class="osr">{{ workOrder.data.wonum }} - P{{ workOrder.data.priority }}</span>
+      </div>
+      <div ng-switch on="workOrder.statusValue()" class="work-order-list-right osr">
+
+        <div ng-switch-when="7">COMPLETED</div>
+
+        <div ng-switch-when="-1">ABORTED</div>
+
+        <div ng-switch-default>
+          <div class="work-order-list-workpack">WorkPack</div>
+          <div class="work-order-list-arrow-icon"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="description">
+      <div class="work-order-list-row" >
+        <div class="work-order-list-location-icon"></div>
+        <div class="work-order-list-content osr">
+          {{ workOrder.data.streetAddress }}<br>
+          {{ workOrder.data.postalcode}}
+        </div>
+      </div>
+
+      <div class="work-order-list-row">
+        <div class="work-order-list-job-icon"></div>
+        <div class="work-order-list-content osr">{{ workOrder.data.description }}</div>
+      </div>
+
+      <div class="work-order-list-row">
+        <div class="work-order-list-time-icon"></div>
+        <div class="work-order-list-date-text osb">Target Finish Date:<br>Target Finish Time:</div>
+        <div class="work-order-list-date osr">
+          {{ workOrder.data.targetStartDate | date:'yyyy-MM-dd' }}<br>
+          {{ workOrder.data.targetStartDate | date:'HH:mm' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</a>

@@ -1,0 +1,27 @@
+<div>
+  <div ng-show="complete" class="action" ng-init="complete=true">
+
+    <div class="top">
+
+      <img alt="Exclaimation mark!" src="images/risk-assess-complete-icon-grey.png">
+
+      <div class="message darkgrey tg">RISK ASSESSMENT COMPLETE?</div>
+
+    </div>
+
+    <div class="bottom">
+      <div class="buttons">
+
+        <button class="btn red no" ng-click="complete=!complete">NO</button>
+        <button class="btn green yes" ng-click="yes()">YES</button>
+
+      </div>
+    </div>
+
+  </div>
+  <div ng-show="!complete">
+    <mgaction ok="yes()" icon="images/risk-assess-complete-icon-red.png" btn-text="OK to continue" tel="0871234567" message="Contact Supervisor">
+      RISK ASSESSMENT<br><span class="darkred">NOT</span> COMPLETE!
+    </mgaction>
+  </div>
+</div>

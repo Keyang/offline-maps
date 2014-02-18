@@ -1,0 +1,140 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <title>May Gurney</title>
+
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="styles/reset.css">
+    <link rel="stylesheet" href="styles/fonts.css">
+    <link rel="stylesheet" href="styles/colors.css">
+    <link rel="stylesheet" href="styles/main.css">
+
+    <link rel="stylesheet" href="styles/dialog.css">
+    <link rel="stylesheet" href="styles/btn.css">
+    <link rel="stylesheet" href="styles/tabs.css">
+    <link rel="stylesheet" href="styles/section.css">
+    <link rel="stylesheet" href="styles/action.css">
+    <link rel="stylesheet" href="styles/header.css">
+    <link rel="stylesheet" href="styles/footer.css">
+    <link rel="stylesheet" href="styles/login.css">
+    <link rel="stylesheet" href="styles/expandable.css">
+
+    <!-- For use in the browser to show the camera feed -->
+    <link rel="stylesheet" href="styles/camera.css">
+    <!-- endbuild -->
+  </head>
+
+  <body>
+
+    <div class="container" ng-cloak ng-view></div>
+
+    <!-- libs -->
+
+    <!-- nodejs url/path lib and deps -->
+    <script src="components/querystring.js"></script>
+    <script src="components/punycode.js"></script>
+    <script src="components/url.js"></script>
+    <script src="components/path.js"></script>
+    <!-- end: node js url/path lib and deps -->
+
+    <script src="components/hammer.js"></script>
+    <script src="components/sha1.js"></script>
+    <script src="components/spark-md5.js"></script>
+    <script src="components/Lawnchair.js"></script>
+    <script src="components/angular/angular.js"></script>
+    <script src="components/fastclick.js"></script>
+    <!-- end: libs -->
+
+    <script>
+        (function() {
+            var script = document.createElement("script");
+            if(navigator.userAgent.toLowerCase().indexOf("android") > -1) {
+                script.src = "components/cordova/cordova.js";
+                document.body.appendChild(script);
+            }
+            else {
+                var cameraScript = document.createElement("script");
+                script.src = "components/phonegap-desktop/phonegap-desktop.js";
+                cameraScript.src = "js/Camera.js";
+                document.body.appendChild(script);
+                document.body.appendChild(cameraScript);
+            }
+        })();
+    </script>
+
+    <!-- plugin script files -->
+    <script src="plugins/filehasher.js"></script>
+    <script src="plugins/fileopener.js"></script>
+    <script src="plugins/version.js"></script>
+    <!-- end: plugin script files -->
+
+    <script src="components/iscroll/iscroll-lite.js"></script>
+    <script src="components/feedhenry/feedhenry.js"></script>
+    <script src="components/feedhenry/sync-cli.js"></script>
+
+    <!-- build:js scripts/scripts.js -->
+
+    <script src="App.js"></script>
+
+    <!-- Services -->
+    <script src="services/DataManager.js"></script>
+    <script src="services/Logger.js"></script>
+    <script src="services/GPSService.js"></script>
+    <script src="services/Attachments.js"></script>
+    <script src="services/network.js"></script>
+    <script src="services/navigation.js"></script>
+
+    <!-- Controllers -->
+    <script src="controllers/Plain.js"></script>
+    <script src="controllers/WorkOrderList.js"></script>
+    <script src="controllers/WorkOrder.js"></script>
+    <script src="controllers/JobPack.js"></script>
+    <script src="controllers/Login.js"></script>
+
+    <!-- Directives -->
+    <script src="directives/WorkOrderListItem.js"></script>
+    <script src="directives/MGHeader.js"></script>
+    <script src="directives/MGScroll.js"></script>
+    <script src="directives/RiskAssessment.js"></script>
+    <script src="directives/MGDialog.js"></script>
+    <script src="directives/MGAction.js"></script>
+    <script src="directives/Expandable.js"></script>
+    <script src="directives/Swipeable.js"></script>
+
+    <script src="js/FileTransfer.js"></script>
+
+    <script>
+
+        document.addEventListener("deviceready", function() {
+            console.log("deviceready");
+
+            function bootstrap() {
+                angular.bootstrap(document.body, ['mgApp']);
+            }
+
+            $fh.init({
+                "host": "http://192.168.28.124:8000",
+                "appid": "H1TxnhqHDxURTJ9MXK6VSiBe",
+                "appkey": "a7f19c279ede5b3db9b51c944d1906cc284f77d9"
+            }, function(res) {
+                bootstrap();
+                console.log("$fh initialised");
+            }, function(msg, err) {
+                bootstrap();
+                console.log("$fh failed to initialise");
+            });
+        }, false);
+
+        FastClick.attach(document.body);
+
+
+
+    </script>
+    <!-- endbuild -->
+
+  </body>
+
+</html>
