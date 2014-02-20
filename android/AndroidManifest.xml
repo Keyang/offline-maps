@@ -44,9 +44,9 @@
         <!-- Need to do the same for release -->
 		<!-- must be on line at elaset once to validate keys etc + to download map -->
         <!-- keytool -v -list -alias androiddebugkey -keystore ~/.android/debug.keystore -->
-        <meta-data
+        <!-- <meta-data
                 android:name="com.google.android.maps.v2.API_KEY"
-                android:value="AIzaSyD9GXmNhTkYJSY0fMfH2KRVcpk-T7nT1bU"/>
+                android:value="AIzaSyD9GXmNhTkYJSY0fMfH2KRVcpk-T7nT1bU"/> -->
 
     </application>
     <uses-sdk

@@ -37,6 +37,7 @@ public final class R {
         public static final int common_signin_btn_text_pressed_light=0x7f020017;
         public static final int ic_launcher=0x7f020018;
         public static final int icon=0x7f020019;
+        public static final int map_pin=0x7f02001a;
     }
     public static final class id {
         public static final int map=0x7f060001;

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="mapsforge-map-android-0.4.0-SNAPSHOT-jar-with-dependencies">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/android/libs/mapsforge-map-android-0.4.0-SNAPSHOT-jar-with-dependencies.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
